@@ -87,7 +87,7 @@ class Model
         $db = 'sqlite:../dbs/geodataDB.db';
         $pdo = null;
         try {
-            $pdo = new PDO($db, '', 'ik1056');
+            $pdo = new PDO($db);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $pdo;
         } catch (PDOException $ex) {
