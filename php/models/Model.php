@@ -84,10 +84,10 @@ class Model
 
     private function getPDOConnection(): PDO
     {
-        $db = 'sqlite:../dbs/DATABASNAMN.sqlite';
+        $db = 'sqlite:../dbs/geodataDB.db';
         $pdo = null;
         try {
-            $pdo = new PDO($db);
+            $pdo = new PDO($db, '', 'ik1056');
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $pdo;
         } catch (PDOException $ex) {
