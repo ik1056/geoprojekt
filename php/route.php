@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Ludvig
- * Date: 2018-03-19
- * Time: 17:13
- */
+
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 header('Content-Type: text/html; charset=utf-8');
@@ -25,8 +20,7 @@ spl_autoload_register(function ($className) {
     }
 });
 
-if (isset($_POST['controller']) &&
-    isset($_POST['function'])   ){
+if (isset($_POST['controller']) && isset($_POST['function'])){
     $controller = $_POST['controller'];
     $function = $_POST['function'];
 
