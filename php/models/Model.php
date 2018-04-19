@@ -84,7 +84,7 @@ class Model
 
     private function getPDOConnection(): PDO
     {
-        $db = 'sqlite:../dbs/geodataDB.sqlite';
+        $db = 'sqlite:./dbs/geodataDB.sqlite';
         $pdo = null;
         try {
             $pdo = new PDO($db);
