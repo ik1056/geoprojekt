@@ -1,10 +1,29 @@
 <?php
 class Model
 {
-    public function addMarkerToDB(){
+    public function addMarkerToDB($type, $coords, $info){
         $pdo = $this->getPDOConnection();
         $statement = $pdo->prepare("INSERT INTO features (type, coords, info) VALUES (:type, :coords, :info);");
+        $statement->bindParam(':type',$type);
+        $statement->bindParam(':coords', $coords);
+        $statement->bindParam(':info', $info);
+        $statement->execute();
+
+        $pdo = null;
     }
+
+    public function updateDBFromCSV(){
+        //TODO: Ladda in CSV-filen och fyll Databasen.
+    }
+
+    public function getCurrentWeather(){
+        //TODO: Ladda in data från en vädertjänst, t.ex. yr.no eller AccuWeather.
+    }
+
+    public function getTrafficInfo(){
+        //TODO: Ladda in data om trafikhändelser.
+    }
+
     public function createDB(){
         $pdo = $this->getPDOConnection();
         /*$pdo->exec("CREATE TABLE requiem_rosters (
