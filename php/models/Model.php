@@ -10,10 +10,54 @@ class Model
         $statement->execute();
 
         $pdo = null;
+
+        return 'done';
+    }
+
+    public function getMarkersFromDB(){
+        $pdo = $this->getPDOConnection();
+        $query = $pdo->query("SELECT * FROM features;");
+        $res = $query->fetchAll();
+
+        $features = array(
+            "type" => "FeatureCollection",
+            "features" => array()
+        );
+        foreach($res as $feature){
+            array_push($features['features'],
+                array(
+                    "type" => "feature",
+                    "geometry" => array(
+                        "type" => $feature['type'],
+                        "coordinates" => $feature['coords']
+                    ),
+                    "properties" => array(
+                        "information" => $feature['info']
+                    )
+                )
+            );
+        }
+        return json_encode($features);
+        //Uppdaterar antal bud som lagts på den auktionen
+
+
     }
 
     public function updateDBFromCSV(){
         //TODO: Ladda in CSV-filen och fyll Databasen.
+        $file = file('./dbs/backup.csv');
+        $res = array();
+        foreach($file as $line){
+            $data = str_getcsv($line, ";");
+            array_push($res,
+                array(
+                    'type' => $data[0],
+                    'coords' => $data[1],
+                    'info' => $data[2]
+                )
+            );
+        }
+        return $res;
     }
 
     public function getCurrentWeather(){

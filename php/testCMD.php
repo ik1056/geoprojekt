@@ -9,4 +9,7 @@
 include 'models/Model.php';
 
 $m = new Model();
-echo $m->createDB();
+echo $m->addMarkerToDB('Point', '88,22', 'Test igen');
+?>
+<script> console.log(<?=$m->getMarkersFromDB()?>); </script>
+
