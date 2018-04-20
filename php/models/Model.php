@@ -1,6 +1,10 @@
 <?php
 class Model
 {
+    public function addMarkerToDB(){
+        $pdo = $this->getPDOConnection();
+        $statement = $pdo->prepare("INSERT INTO features (type, coords, info) VALUES (:type, :coords, :info);");
+    }
     public function createDB(){
         $pdo = $this->getPDOConnection();
         /*$pdo->exec("CREATE TABLE requiem_rosters (
@@ -31,7 +35,7 @@ class Model
 
         $pdo->exec("
         CREATE PROCEDURE requiem_getRaidRoster(IN in_id INT)
-        BEGIN  
+        BEGIN
         SELECT roster.title, raider.name, raider.realm, raider.thumbnail, raider.armory, raider.class, raider.role, raider.rank
         FROM requiem_rosters roster, requiem_raiders raider
         WHERE roster.id = in_id AND roster.id = raider.roster;
@@ -39,7 +43,7 @@ class Model
 
         $pdo->exec("
         CREATE PROCEDURE requiem_addRoster(IN in_title VARCHAR(256))
-        BEGIN  
+        BEGIN
         INSERT INTO requiem_rosters (title) VALUES (in_title);
         END");
 
@@ -53,14 +57,14 @@ class Model
                 IN in_class VARCHAR(256),
                 IN in_role VARCHAR(256),
                 IN in_rank VARCHAR(256))
-        BEGIN  
+        BEGIN
         INSERT INTO requiem_raiders (roster, name, realm, thumbnail, armory, class, role, rank)
         VALUES (in_roster, in_name, in_realm, in_thumbnail, in_armory, in_class, in_role, in_rank);
         END");
 
         $pdo->exec("
         CREATE PROCEDURE requiem_getProgress(IN in_id INT)
-        BEGIN  
+        BEGIN
         SELECT roster.title, prog.raid_name, prog.difficulty, prog.total_bosses, prog.bosses_killed
         FROM requiem_rosters roster, requiem_progress prog
         WHERE roster.id = in_id AND prog.roster = in_id;
@@ -71,8 +75,8 @@ class Model
                 IN in_raid_name VARCHAR(256),
                 IN in_difficulty VARCHAR(256),
                 IN in_total INT,
-                IN in_killed INT)        
-        BEGIN  
+                IN in_killed INT)
+        BEGIN
         DELETE FROM requiem_progress
         WHERE difficulty = in_difficulty AND raid_name = in_raid_name;
         INSERT INTO requiem_progress (raid_name, difficulty, total_bosses, bosses_killed)
