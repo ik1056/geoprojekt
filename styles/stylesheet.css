@@ -25,6 +25,14 @@ header h1 {
     background: #f4f4f4;
     cursor: pointer;
 }
+.index-map:hover > svg {
+    color: lightgreen;
+    transition: color 0.2s linear;
+}
+.index-login:hover > svg {
+    color: #71bed7;
+    transition: color 0.2s linear;
+}
 .index-map p, .index-login p {
     font-size: 1.3em;
     font-weight: bold;
