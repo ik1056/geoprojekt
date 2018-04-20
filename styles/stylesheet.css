@@ -53,7 +53,7 @@
     font-size: 1.3em;
     font-weight: bold;
 }
-.fa-map, .fa-sign-in-alt {
+.fa-map, .index-login-icon {
     font-size: 6em;
 }
 /* endregion index */
@@ -61,8 +61,49 @@
 .map-header {
     margin-top: 1.5em;
 }
-.main-map {
-    margin-top: 1.5em;
+.header-wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+.search-bar {
+    width: 50%;
+}
+.map-login {
+    margin: auto 0;
+    font-size: 1.5em;
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
+}
+.map-login > ul {
+    display: inline-flex;
+}
+.map-login > ul > li {
+    display: inline-block;
+    padding-right: 1em;
+    font-weight: 300;
+}
+.map-login > ul > li:hover {
+    cursor: pointer;
+}
+.map-login a:link, .map-login a:visited {
+    color: #222;
+}
+.map-login-icon {
+    color: #71bed7;
+}
+.map-news-icon {
+    color: #fe8402;
+}
+.map-options {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.map-options button {
+    margin-bottom: 1em;
+    width: 65%;
+
 }
 #map {
     height: 91vh;
