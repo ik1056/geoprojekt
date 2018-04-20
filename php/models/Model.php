@@ -38,17 +38,21 @@ class Model
             );
         }
         return json_encode($features);
-        //Uppdaterar antal bud som lagts på den auktionen
-
-
     }
 
     public function updateDBFromCSV(){
         //TODO: Ladda in CSV-filen och fyll Databasen.
+        $pdo = $this->getPDOConnection();
+        $pdo->exec("DELETE FROM features;");
+        $pdo = null;
+
         $file = file('./dbs/backup.csv');
         $res = array();
         foreach($file as $line){
             $data = str_getcsv($line, ";");
+
+            $this->addMarkerToDB($data[0], $data[1], $data[2]);
+
             array_push($res,
                 array(
                     'type' => $data[0],
