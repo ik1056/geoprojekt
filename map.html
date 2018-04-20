@@ -2,7 +2,7 @@
 <html lang="sv">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Karta</title>
 
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link rel="stylesheet" href="plugins/styles/bootstrap.min.css">
@@ -24,6 +24,29 @@
     </style>
 </head>
 <body>
+<header class="map-header">
+    <div class="container-fluid row">
+        <div class="col-md-2"></div>
+        <div class="header-wrapper col-md-8 col-sm-12">
+            <input id="pac-input" class="controls form-control" type="text" placeholder="Sök..">
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</header>
+<div class="container-fluid">
+    <aside class="col-md-2">
 
+    </aside>
+    <main class="col-md-8 main-map">
+        <div id="map">
+        </div>
+    </main>
+    <aside class="col-md-2">
+
+    </aside>
+</div>
 </body>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDAdu-grVslsoip9o-QATM_fY56zjCfyQ&callback=initMap&libraries=places">
+</script>
 </html>
