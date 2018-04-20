@@ -1,0 +1,35 @@
+/* region index */
+header {
+    margin: 6em 0;
+}
+header h1 {
+    text-align: center;
+    font-weight: bold;
+}
+.container {
+    margin-top: 5%;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+.index-map, .index-login {
+    width: 400px;
+    height: 350px;
+    margin: 1em auto;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    border: solid #f5f5f5;
+    border-radius: 10px;
+    background: #f4f4f4;
+    cursor: pointer;
+}
+.index-map p, .index-login p {
+    font-size: 1.3em;
+    font-weight: bold;
+}
+.fa-map, .fa-sign-in-alt {
+    font-size: 6em;
+}
+/* endregion index */
