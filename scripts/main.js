@@ -1,8 +1,5 @@
-$(document).ready(function(){
-
-});
 var map;
-var infoWindow;
+var infowindow;
 function initMap() {
     var uluru = {lat: 60.1389958, lng: 15.1629542};
     map = new google.maps.Map(document.getElementById('map'), {
@@ -73,12 +70,36 @@ function loadDataFromDB(){
         data: {"controller":"Controller","function":"getMarkers"},
         dataType: "json",
         success: function (data) {
-
-            console.log(data);
             map.data.addGeoJson(data);
+            setMarkers();
         },
         error: function(data){
             console.log(JSON.stringify(data));
         }
     });
 }
+function setMarkers(){
+    var bounds = new google.maps.LatLngBounds();
+    google.maps.event.addListener(map.data, 'addfeature', function (e) {
+        if (e.feature.getGeometry().getType() === 'Point') {
+            bounds.extend(e.feature.getGeometry().get());
+            map.fitBounds(bounds);
+        }
+    });
+    google.maps.event.addListener(map.data, 'click', function (e) {
+        if(infowindow) {
+            infowindow.close();
+        }
+        console.log(e.feature.getProperty('information'));
+        infowindow = new google.maps.InfoWindow({
+            content: e.feature.getProperty('information'),
+            options: {pixelOffset: new google.maps.Size(0, -30)},
+            position: e.feature.getGeometry().get()
+        });
+        infowindow.open(map);
+    });
+}
+
+$(document).ready(function(){
+
+});
