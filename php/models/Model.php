@@ -60,9 +60,9 @@ class Model
 
             array_push($res,
                 array(
-                    'type' => $data[0],
-                    'coords' => $data[1],
-                    'info' => $data[2]
+                    'type' => utf8_encode($data[0]),
+                    'coords' => utf8_encode($data[1]),
+                    'info' => utf8_encode($data[2])
                 )
             );
         }
