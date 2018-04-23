@@ -27,17 +27,17 @@ class Model
         );
         foreach($res as $feature){
             $latlng = str_getcsv($feature['coords'], ',');
-            $lat = $latlng[0];
-            $lng = $latlng[1];
+            $lat = intval($latlng[0]);
+            $lng = intval($latlng[1]);
             array_push($features['features'],
                 array(
-                    "type" => "feature",
+                    "type" => "Feature",
                     "geometry" => array(
-                        "type" => $feature['type'],
-                        "coordinates" => array("lat" => $lat, "lng" => $lng)
+                        "type" => utf8_encode($feature['type']),
+                        "coordinates" => array($lat, $lng)
                     ),
                     "properties" => array(
-                        "information" => $feature['info']
+                        "information" => utf8_encode($feature['info'])
                     )
                 )
             );

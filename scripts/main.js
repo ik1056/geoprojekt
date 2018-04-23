@@ -1,19 +1,21 @@
 $(document).ready(function(){
+
 });
+var map;
+var infoWindow;
 function initMap() {
-    var uluru = {lat: 37.795112, lng: 13.4843497};
+    var uluru = {lat: 60.1389958, lng: 15.1629542};
     map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 3,
+        zoom: 4,
         center: uluru,
         mapTypeControl: true,
         mapTypeControlOptions: {
-            style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
+            style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR
         }
     });
     // Create the search box and link it to the UI element.
     var input = document.getElementById('pac-input');
     var searchBox = new google.maps.places.SearchBox(input);
-
 
     // Bias the SearchBox results towards current map's viewport.
     map.addListener('bounds_changed', function () {
@@ -25,13 +27,11 @@ function initMap() {
         if (places.length == 0) {
             return;
         }
-
         // Clear out the old markers.
         markers.forEach(function (marker) {
             marker.setMap(null);
         });
         markers = [];
-
         // For each place, get the icon, name and location.
         var bounds = new google.maps.LatLngBounds();
         places.forEach(function (place) {
@@ -46,7 +46,6 @@ function initMap() {
                 anchor: new google.maps.Point(17, 34),
                 scaledSize: new google.maps.Size(25, 25)
             };
-
             // Create a marker for each place.
             markers.push(new google.maps.Marker({
                 map: map,
@@ -60,12 +59,26 @@ function initMap() {
             } else {
                 bounds.extend(place.geometry.location);
             }
-
         });
         map.fitBounds(bounds);
     });
 
+    loadDataFromDB();
+}
 
+function loadDataFromDB(){
+    $.ajax({
+        type: "POST",
+        url: "./php/route.php",
+        data: {"controller":"Controller","function":"getMarkers"},
+        dataType: "json",
+        success: function (data) {
 
-
+            console.log(data);
+            map.data.addGeoJson(data);
+        },
+        error: function(data){
+            console.log(JSON.stringify(data));
+        }
+    });
 }
