@@ -16,6 +16,7 @@
     <script src="plugins/scripts/bootstrap.min.js"></script>
 
     <script src="scripts/main.js"></script>
+    <script src="scripts/rss.js"></script>
     <style>
         .container-fluid {
             margin: 0;
@@ -36,10 +37,12 @@
                 </ul>
             </div>
         </div>
-        <div class="col-md-2"></div>
+        <div class="col-md-2 rss">
+
+        </div>
     </div>
 </header>
-<div class="container-fluid"style="margin-top:1.5em;">
+<div class="container-fluid" style="margin-top:1.5em;">
     <aside class="col-md-2">
         <div class="map-options">
             <button id="directions" class="btn btn-primary">Vägbeskrivning</button>
@@ -51,7 +54,20 @@
         </div>
     </main>
     <aside class="col-md-2">
+        <div class="traffic-news-item">
+            <div class="traffic-rss-header">
 
+            </div>
+            <div class="traffic-rss-message">
+
+            </div>
+            <div class="traffic-rss-footer">
+                <span class="traffic-rss-type"></span>
+                <span class="traffic-rss-author">
+                    <i></i>
+                </span>
+            </div>
+        </div>
     </aside>
 </div>
 </body>
