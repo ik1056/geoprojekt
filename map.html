@@ -29,13 +29,11 @@
     <div class="container-fluid row">
         <div class="col-md-2"></div>
         <div class="header-wrapper col-md-8 col-sm-12">
+             <div class="map-options">
+                 <button id="directions" class="btn btn-primary">Vägbeskrivning</button>
+                 <button id="traffic-info" class="btn btn-primary">Trafikinformation</button>
+             </div>
             <input id="pac-input" class="controls form-control search-bar" type="text" placeholder="Sök..">
-            <div class="map-login">
-                <ul>
-                    <li><a href="news.html"><i class="fas fa-newspaper map-news-icon"></i> Nyheter</a></li>
-                    <li><a href="admin.php"><i class="fas fa-sign-in-alt map-login-icon"></i> Admin panel</a></li>
-                </ul>
-            </div>
         </div>
         <div class="col-md-2 rss">
 
@@ -44,30 +42,13 @@
 </header>
 <div class="container-fluid" style="margin-top:1.5em;">
     <aside class="col-md-2">
-        <div class="map-options">
-            <button id="directions" class="btn btn-primary">Vägbeskrivning</button>
-            <button id="traffic-info" class="btn btn-primary">Trafikinformation</button>
-        </div>
     </aside>
     <main class="col-md-8 main-map">
         <div id="map">
         </div>
     </main>
-    <aside class="col-md-2">
-        <div class="traffic-news-item">
-            <div class="traffic-rss-header">
+    <aside id="news-rss" class="col-md-2">
 
-            </div>
-            <div class="traffic-rss-message">
-
-            </div>
-            <div class="traffic-rss-footer">
-                <span class="traffic-rss-type"></span>
-                <span class="traffic-rss-author">
-                    <i></i>
-                </span>
-            </div>
-        </div>
     </aside>
 </div>
 </body>
