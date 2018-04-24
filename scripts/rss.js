@@ -5,7 +5,7 @@ function getTrafficNews() {
         "<LOGIN authenticationkey='88597617d8524d5e9baf509b2b92a968' />" +
         "<QUERY objecttype='Situation' limit='10'>" +
         "<FILTER>" +
-        "</FILTER>"+
+        "</FILTER>" +
         "</QUERY>" +
         "</REQUEST>";
     $.ajax({
@@ -17,17 +17,25 @@ function getTrafficNews() {
         success: function (data) {
             var rs = data.RESPONSE.RESULT[0].Situation;
             console.log(rs);
-            console.log(data);
-            for(var i = 0; i < rs.length; i++) {
-                var html =
-                    '<div class="traffic-news-item">' +
-                    '<div class="traffic-rss-header">'+
-                    '</div>'+
-                    '<div class="traffic-rss-message">' +
-                    '</div>'+
-                    '<div class="traffic-rss-footer">' +
-                    '</div>'+
-                    '</div>'
+            for (var i = 0; i < rs.length; i++) {
+                var timePosted = rs[i].Deviation[0].CreationTime;
+                var time = timePosted.split("T");
+                var html = '<div class="traffic-news-item">';
+                html += '<div class="traffic-rss-header">';
+                html += '<span class="traffic-rss-headline">';
+                html += rs[i].Deviation[0].Creator;
+                html += '</span>';
+                html += '<span class="traffic-news-posted">';
+                html += time[0];
+                html += '</span>';
+                html += '</div>';
+                html += '<div class="traffic-rss-message">';
+                html += rs[i].Deviation[0].Message;
+                html += '</div>';
+                html += '<div class="traffic-rss-footer">';
+                html += '</div>';
+                html += '</div>';
+                //$('#news-rss').append(html);
             }
         },
         error: function (data) {
