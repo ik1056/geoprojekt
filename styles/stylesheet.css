@@ -107,13 +107,11 @@
 }
 .map-options {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    justify-content: space-between;
 }
 .map-options button {
-    margin-bottom: 1em;
+    margin-right: 1em;
     width: 65%;
-
 }
 #map {
     height: 91vh;
