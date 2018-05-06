@@ -68,7 +68,7 @@
 }
 /* endregion index */
 /* region map */
-#login {
+#login-map-view {
     position: fixed;
     top: 0;
     left: 0;
