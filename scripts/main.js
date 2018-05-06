@@ -1,6 +1,6 @@
 var map;
 var infowindow;
-var markers = [];
+var mymarkers = [];
 function initMap() {
     var uluru = {lat: 60.1389958, lng: 15.1629542};
     map = new google.maps.Map(document.getElementById('map'), {
@@ -120,12 +120,15 @@ function setMarkers(data, hasWeather){
         var f = data.features[i];
         var g = data.features[i].geometry;
         var c = {lat: g.coordinates[1], lng: g.coordinates[0] };
-
+        var img = null;
+        if(!hasWeather)
+            img = "./assets/warningSmall.png";
         var marker = new google.maps.Marker({
             position: c,
+            icon: img,
             map: map,
             content: f.properties.information,
-            title: "" + markers.length,
+            title: "" + mymarkers.length,
             id: "",
             feature: undefined
         });
@@ -133,27 +136,28 @@ function setMarkers(data, hasWeather){
         var feature = new google.maps.Data.Feature();
         feature.setGeometry(marker.position);
         feature.setProperty("information", marker.content);
-        feature.setProperty("id", markers.length);
+        feature.setProperty("id", mymarkers.length);
         if(hasWeather) {
             feature.setProperty("weather", "");
+            map.data.add(feature);
         }
-        else{
+        else {
             marker.id = data.features[i].properties.newsId;
-            marker.icon = "../assets/warningSmall.png";
+            marker.addListener('click', function(){
+                var content = "<span>Information:" + marker.feature.getProperty('information') + "</span>";
+                openInfoWindow(marker.feature, content);
+            });
         }
         marker.feature = feature;
-        map.data.add(feature);
-        markers.push(marker);
+        mymarkers.push(marker);
     }
 }
-
 function getMarkerById(id){
-    for(var i = 0; i < markers.length; i++){
-        if(markers[i].id === id){
-            return markers[i];
+    for(var i = 0; i < mymarkers.length; i++){
+        if(mymarkers[i].id === id){
+            return mymarkers[i];
         }
     }
-
 }
 
 $(document).ready(function(){
@@ -179,7 +183,7 @@ $(document).ready(function(){
         else{
             var content = "<span>Information:" + e.feature.getProperty('information') + "</span>";
 
-           openInfoWindow(e.feature, content);
+            openInfoWindow(e.feature, content);
         }
     });
 
