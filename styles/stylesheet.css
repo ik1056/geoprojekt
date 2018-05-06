@@ -68,24 +68,20 @@
 }
 /* endregion index */
 /* region map */
-#login-map-view {
-    position: fixed;
-    top: 0;
-    left: 0;
-    margin: 1em;
-    text-align: center;
-    font-size: 1em;
-}
 #login:hover {
-    text-decoration: none;
-    transition: background 0.2s linear;
-}
+     text-decoration: none;
+     transition: background 0.2s linear;
+ }
 .map-header {
     margin-top: 1.5em;
 }
 .header-wrapper {
     display: flex;
     justify-content: space-between;
+}
+.directions {
+    display: none;
+    width: 25%;
 }
 .search-bar {
     width: 50%;
