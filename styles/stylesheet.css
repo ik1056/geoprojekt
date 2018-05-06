@@ -151,3 +151,28 @@
 }
 
 /* endregion map */
+
+/* region login */
+    #login-container {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .back-arrow {
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin: 1em 3em;
+        font-size:5em;
+    }
+    .login-container {
+        width: 50%;
+        margin-bottom: 15em;
+    }
+    .login-container input {
+        margin: 0.5em 0 1em 0;
+    }
+
+/* endregion login */
