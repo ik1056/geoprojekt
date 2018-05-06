@@ -323,10 +323,7 @@ $(document).ready(function(){
                html += '</span>';
                html += '</div>';
                if(rs[i].Deviation[0].RoadNumber !== undefined)
-                    html += '<span>'+ rs[i].Deviation[0].RoadNumber +'</span>'
-               html += '<div class="traffic-rss-message">';
-               html += rs[i].Deviation[0].Message;
-               html += '</div>';
+                    html += '<span>'+ rs[i].Deviation[0].RoadNumber +'</span>';
                html += '<div class="traffic-rss-footer">';
                html += '       </div>';
                html += '</div></a>';
@@ -395,6 +392,20 @@ function showWeatherWidget(lat, lng){
     });
 }
 
+function getStationsInZone(lat, lng) {
+    $.ajax({
+        type:'POST',
+        url: './php/route.php',
+        data: {'controller' : 'Controller', 'function' : 'getStationsInZone', 'lat' : lat, 'lng' : lng},
+        dataType: 'json',
+        success: function(data) {
+            console.log(data);
+        },
+        error: function(data) {
+            console.log('Error: '+ JSON.stringify(data));
+        }
+    })
+}
 function toggleTrafficMarkers(){
     //Do stuff
 }
