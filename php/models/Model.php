@@ -91,6 +91,41 @@ class Model
         //TODO: Ladda in data om trafikhändelser.
     }
 
+    public function login($username, $password){
+        $usr = $username;
+        $pwd = $password;
+        $pdo = $this->getPDOConnection();
+        $query = $pdo->prepare(
+            "SELECT password FROM Users WHERE username = :username LIMIT 1");
+        $query->bindParam(":username", $usr);
+        $query->execute();
+        $res = $query->fetch();
+        $pdo = null;
+        if($res != null){
+            if(password_verify($pwd, $res[0])) {
+                return "success";
+            }
+            else
+                return "error";
+        }
+        else{
+            return "error";
+        }
+    }
+
+    public function register(){
+        $username = "admin";
+        $password = password_hash("123", PASSWORD_BCRYPT);
+        $pdo = $this->getPDOConnection();
+        $statement = $pdo->prepare("INSERT INTO users (username, password) VALUES (:username, :password)");
+        $statement->bindparam(":username", $username);
+        $statement->bindParam(":password", $password);
+        $statement->execute();
+
+        $pdo = null;
+        return "success";
+    }
+
     private function getPDOConnection(): PDO
     {
         $db = 'sqlite:./dbs/geodataDB.sqlite';

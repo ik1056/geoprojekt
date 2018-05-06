@@ -11,17 +11,7 @@ ini_set('display_errors', 1);
 include 'models/Model.php';
 
 $m = new Model();
-/*echo $m->addMarkerToDB('Point', '88,22', 'Test igen');
-echo $m->addMarkerToDB('Point', '88,22', 'Test igen');
-echo $m->addMarkerToDB('Point', '88,22', 'Test igen');
-echo $m->addMarkerToDB('Point', '88,22', 'Test igen');
-echo $m->addMarkerToDB('Point', '88,22', 'Test igen');
-echo $m->addMarkerToDB('Point', '88,22', 'Test igen');*/
-print_r($m->updateDBFromCSV());
-echo '<br><br>';
-print_r(json_encode($m->getMarkersFromDB()));
-echo '<br>';
-print_r($m->getCurrentWeather("59.930764","15.435104000000024"));
+echo $m->login("admin", "123");
 ?>
 <!--<script> //console.log(<?=$m->getMarkersFromDB()?>); </script>-->
 

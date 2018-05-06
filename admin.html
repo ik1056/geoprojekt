@@ -18,7 +18,7 @@
 <script src="scripts/rss.js"></script>
 <body>
 <a href="map.html" class="back-arrow"><i class="fas fa-arrow-left"></i></a>
-<div id="login-container" class="container">
+<div id="login-container" class="container" style="display: none;">
     <div class="login-container">
         <h1 style="text-align:center;">Logga in</h1>
         <label for="username" class="label label-primary">Användarnamn</label>
@@ -38,15 +38,32 @@
                url: './php/route.php',
                data: {'controller' : 'Controller', 'function' : 'login', 'username' : username, 'password' : password},
                dataType: 'json',
-               success: function() {
-                   console.log(data);
+               success: function(data) {
+                   if(data === "success"){
+                       var d = new Date();
+                       var hours = 24;
+                       d.setTime(d.getTime() + (hours*60*60*1000));
+                       document.cookie = "loggedin=true; expires="+d.toUTCString()+";";
+                       location.reload();
+                   }
                },
                error: function(data) {
                    console.log('Error: '+JSON.stringify(data));
                }
            })
         });
-    })
+        function getCookie(name){
+            var value = "; " + document.cookie;
+            var parts = value.split("; " + name + "=");
+            if (parts.length == 2) return parts.pop().split(";").shift();
+        }
+        if(getCookie("loggedin")){
+            $('#login-container').hide();
+        }
+        else{
+            $('#login-container').show();
+        }
+    });
 </script>
 </body>
 </html>
