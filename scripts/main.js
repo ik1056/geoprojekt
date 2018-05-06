@@ -1,5 +1,6 @@
 var map;
 var infowindow;
+var markers = [];
 function initMap() {
     var uluru = {lat: 60.1389958, lng: 15.1629542};
     map = new google.maps.Map(document.getElementById('map'), {
@@ -77,16 +78,23 @@ function getWeatherData(feature){
             var content = "<span>Information:" + feature.getProperty('information') + "</span><br>"+
                 "<span>Väder:</span><img src=" + data.weather.icon + " style='width: 25px; height: 25px;'/>" +
                 "<span>"+data.temperature.temp+"</span>";
-
-            infowindow = new google.maps.InfoWindow({
-                content: content,
-                options: {pixelOffset: new google.maps.Size(0, -30)},
-                position: feature.getGeometry().get()
-            });
-
-            infowindow.open(map);
+            feature.setProperty('weather', data);
+            openInfoWindow(feature, content);
         }
     });
+}
+
+function openInfoWindow(feature, data){
+    if(infowindow) {
+        infowindow.close();
+    }
+
+    infowindow = new google.maps.InfoWindow({
+        content: data,
+        options: {pixelOffset: new google.maps.Size(0, -30)},
+        position: feature.getGeometry().get()
+    });
+    infowindow.open(map);
 }
 
 function loadDataFromDB(){
@@ -96,15 +104,59 @@ function loadDataFromDB(){
         data: {"controller":"Controller","function":"getMarkers"},
         dataType: "json",
         success: function (data) {
-            map.data.addGeoJson(data);
-            setMarkers();
+            //console.log(map.data.addGeoJson(data, {
+               // idPropertyName: "Id"
+           // }));
+            setMarkers(data, true);
         },
         error: function(data){
             console.log(JSON.stringify(data));
         }
     });
 }
-function setMarkers(){
+//Skapa en feature och lägg till den i en array över alla markers.
+function setMarkers(data, hasWeather){
+    for(var i = 0; i < data.features.length; i++){
+        var f = data.features[i];
+        var g = data.features[i].geometry;
+        var c = {lat: g.coordinates[1], lng: g.coordinates[0] };
+
+        var marker = new google.maps.Marker({
+            position: c,
+            map: map,
+            content: f.properties.information,
+            title: "" + markers.length,
+            id: "",
+            feature: undefined
+        });
+
+        var feature = new google.maps.Data.Feature();
+        feature.setGeometry(marker.position);
+        feature.setProperty("information", marker.content);
+        feature.setProperty("id", markers.length);
+        if(hasWeather) {
+            feature.setProperty("weather", "");
+        }
+        else{
+            marker.id = data.features[i].properties.newsId;
+            marker.icon = "../assets/warningSmall.png";
+        }
+        marker.feature = feature;
+        map.data.add(feature);
+        markers.push(marker);
+    }
+}
+
+function getMarkerById(id){
+    for(var i = 0; i < markers.length; i++){
+        if(markers[i].id === id){
+            return markers[i];
+        }
+    }
+
+}
+
+$(document).ready(function(){
     var bounds = new google.maps.LatLngBounds();
     google.maps.event.addListener(map.data, 'addfeature', function (e) {
         if (e.feature.getGeometry().getType() === 'Point') {
@@ -113,14 +165,24 @@ function setMarkers(){
         }
     });
     google.maps.event.addListener(map.data, 'click', function (e) {
-        if(infowindow) {
-            infowindow.close();
-        }
-        getWeatherData(e.feature);
-    });
-}
+        //Kollar om feature ska hämta värderinformation.
+        if(e.feature.getProperty('weather') !== undefined && e.feature.getProperty('weather') === ""){
+            getWeatherData(e.feature);
+        } //Om feature redan har hämtat värderinformation
+        else if(e.feature.getProperty('weather') !== "" && e.feature.getProperty('weather') !== undefined){
+            var data = e.feature.getProperty('weather');
+            var content = "<span>Information:" + e.feature.getProperty('information') + "</span><br>"+
+                "<span>Väder:</span><img src=" + data.weather.icon + " style='width: 25px; height: 25px;'/>" +
+                "<span>"+data.temperature.temp+"</span>";
+            openInfoWindow(e.feature, content);
+        }//Annars om feature inte ska ha väderinformation - visa bara information
+        else{
+            var content = "<span>Information:" + e.feature.getProperty('information') + "</span>";
 
-$(document).ready(function(){
+           openInfoWindow(e.feature, content);
+        }
+    });
+
     $.support.cors = true;
     var test =
         "<REQUEST>" +
@@ -243,7 +305,8 @@ $(document).ready(function(){
                        county = "Norrbottens län";
                        break;
             }
-               var html = '<div class="traffic-news-item">';
+               var id = rs[i].Id;
+               var html = '<a href="#" class="news-item" data-news-id="'+id+'"><div class="traffic-news-item">';
                html += '<div class="traffic-rss-header">';
                html += '<span class="traffic-rss-headline">';
                html += county;
@@ -262,7 +325,7 @@ $(document).ready(function(){
                html += '</div>';
                html += '<div class="traffic-rss-footer">';
                html += '       </div>';
-               html += '</div>';
+               html += '</div></a>';
                $('#news-rss').append(html);
 
                if(rs[i].Deviation[0].Geometry.WGS84 !== undefined) {
@@ -279,19 +342,36 @@ $(document).ready(function(){
                            "coordinates":geojsonObject.coordinates
                        },
                        "properties":{
-                           "information":rs[i].Deviation[0].Message
+                           "information":rs[i].Deviation[0].Message,
+                           "newsId":rs[i].Id
                        }
                    }
                    geojson['features'].push(newFeature);
-                   map.data.addGeoJson(geojson);
+                   setMarkers(geojson, false);
                }
            }
+
        },
         error: function(data){
            console.log(JSON.stringify(data));
         }
     });
     showWeatherWidget(60.4866813, 15.4060031);
+
+    $('#traffic-info').click(function(){
+        toggleTrafficMarkers();
+    });
+    $('#news-rss').on('click', 'a[class=news-item]', function(e){
+        var id = e.currentTarget.dataset.newsId;
+        if(id !== undefined) {
+            var m = getMarkerById(id);
+            if(m !== undefined){
+                openInfoWindow(m.feature, m.content);
+                map.setZoom(7);
+                map.panTo(m.position);
+            }
+        }
+    });
 });
 
 function showWeatherWidget(lat, lng){
@@ -309,4 +389,8 @@ function showWeatherWidget(lat, lng){
             console.log(JSON.stringify(data));
         }
     });
+}
+
+function toggleTrafficMarkers(){
+    //Do stuff
 }
