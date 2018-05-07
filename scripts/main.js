@@ -217,12 +217,11 @@ $(document).ready(function () {
     showWeatherWidget(60.4866813, 15.4060031);
     $('#directions').on('click', function () {
         //$('#pac-input').hide();
-        $('#directions-container').toggle();
+        $('#directions-container').toggleClass('hidden');
+
     });
     $('.directions').keypress(function (e) {
-        var key = e.which;
-        if (key == 13) {
-            console.log('enter clicked');
+        if (e.keyCode == 13) {
             showDirections();
         }
     });
@@ -267,6 +266,7 @@ function showDirections() {
     }
     directionsDisplay = new google.maps.DirectionsRenderer;
     directionsService = new google.maps.DirectionsService;
+    //dropdown stuff
 
     var start = $('#fromDestination').val();
     var end = $('#toDestination').val();
@@ -280,9 +280,7 @@ function showDirections() {
             directionsDisplay.setDirections(response);
             directionsDisplay.setMap(map);
             directionsDisplay.setPanel(document.getElementById('news-rss'));
-            directionsDisplay.addListener('click', function(e){
-                console.log(response);
-            });
+            console.log(response);
         } else {
             window.alert('Hittade ingen väg mellan ' + start + ' och ' + end);
         }
