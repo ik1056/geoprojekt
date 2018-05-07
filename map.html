@@ -34,7 +34,6 @@
                  <a href="admin.html" class="btn btn-primary">Logga in</a>
                  <button id="directions" class="btn btn-primary">Vägbeskrivning</button>
                  <button id="traffic-info" class="btn btn-primary">Trafikinformation</button>
-
                  <div id="traffic-menu">
                      <div id="traffic-container">
 
@@ -42,15 +41,22 @@
                  </div>
              </div>
             <input id="pac-input" class="controls form-control search-bar pull-left" type="text" placeholder="Sök..">
-            <div id="directions-menu">
-                <div id="directions-container">
-                    <input type="text" id="fromDestination" placeholder="från..." class="form-control directions">
-                    <input type="text" id="toDestination" placeholder="till..." class="form-control directions">
-                </div>
-            </div>
         </div>
         <div class="col-md-2" id="weather">
 
+        </div>
+    </div>
+    <div id="directions-menu">
+        <div id="directions-container" class="hidden" style="display:inline-flex;">
+            <input type="text" id="fromDestination" placeholder="från..." class="form-control directions">
+            <input type="text" id="toDestination" placeholder="till..." class="form-control directions" style="">
+            <select name="transitMode" id="transitMode" class="form-control" style="width:10%">
+                <option value="TRANSIT">Kollektivtrafik</option>
+                <option value="WALKING">Gång</option>
+                <option value="DRIVING">Bil</option>
+                <option value="BICYCLING">Cykel</option>
+            </select>
+            <button class="btn btn-success" id="calc-route" style="height:34px;">Beräkna rutt</button>
         </div>
     </div>
 </header>

@@ -7,6 +7,10 @@
     user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
 }
+body {
+    transition: all 0.2s ease-in-out;
+    -webkit-transition: all 0.2s ease-in-out;
+}
 /* endregion all */
 /* region index */
 .index-header {
@@ -80,7 +84,8 @@
     justify-content: space-between;
 }
 .directions {
-    width: 25%;
+    margin-right: 15px;
+    width: 20%;
 }
 .search-bar {
     width: 50%;
@@ -160,8 +165,12 @@ aside.news-feed{
     height: 25vh;
 }
 #directions-container{
-    display: none;
-    height: 25vh;
+    height: 0;
+    margin: 15px;
+    width: 97%;
+}
+#directions-container select {
+    margin-right: 10px;
 }
 
 /* endregion map */
