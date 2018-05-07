@@ -218,12 +218,9 @@ $(document).ready(function () {
     $('#directions').on('click', function () {
         //$('#pac-input').hide();
         $('#directions-container').toggleClass('hidden');
-
     });
-    $('.directions').keypress(function (e) {
-        if (e.keyCode == 13) {
-            showDirections();
-        }
+    $('#calc-route').click(function(){
+        showDirections();
     });
 
     $('#traffic-info').click(function () {
@@ -270,7 +267,7 @@ function showDirections() {
 
     var start = $('#fromDestination').val();
     var end = $('#toDestination').val();
-    var travelChoice = "TRANSIT";
+    var travelChoice = $('#transitMode').val();
     directionsService.route({
         origin: start,
         destination: end,
