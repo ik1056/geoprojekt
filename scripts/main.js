@@ -63,6 +63,33 @@ function initMap() {
         map.fitBounds(bounds);
     });
 
+
+    var bounds = new google.maps.LatLngBounds();
+    google.maps.event.addListener(map.data, 'addfeature', function (e) {
+        if (e.feature.getGeometry().getType() === 'Point') {
+            bounds.extend(e.feature.getGeometry().get());
+            map.fitBounds(bounds);
+        }
+    });
+    google.maps.event.addListener(map.data, 'click', function (e) {
+        //Kollar om feature ska hämta värderinformation.
+        if (e.feature.getProperty('weather') !== undefined && e.feature.getProperty('weather') === "") {
+            getWeatherData(e.feature);
+        } //Om feature redan har hämtat värderinformation
+        else if (e.feature.getProperty('weather') !== "" && e.feature.getProperty('weather') !== undefined) {
+            var data = e.feature.getProperty('weather');
+            var content = "<span>Information:" + e.feature.getProperty('information') + "</span><br>" +
+                "<span>Väder:</span><img src=" + data.weather.icon + " style='width: 25px; height: 25px;'/>" +
+                "<span>" + data.temperature.temp + "</span>";
+            openInfoWindow(e.feature, content);
+        }//Annars om feature inte ska ha väderinformation - visa bara information
+        else {
+            var content = "<span>Information:" + e.feature.getProperty('information') + "</span>";
+
+            openInfoWindow(e.feature, content);
+        }
+    });
+
     loadDataFromDB();
 }
 
@@ -184,31 +211,7 @@ function clearNewsMarkers(){
 }
 
 $(document).ready(function () {
-    var bounds = new google.maps.LatLngBounds();
-    google.maps.event.addListener(map.data, 'addfeature', function (e) {
-        if (e.feature.getGeometry().getType() === 'Point') {
-            bounds.extend(e.feature.getGeometry().get());
-            map.fitBounds(bounds);
-        }
-    });
-    google.maps.event.addListener(map.data, 'click', function (e) {
-        //Kollar om feature ska hämta värderinformation.
-        if (e.feature.getProperty('weather') !== undefined && e.feature.getProperty('weather') === "") {
-            getWeatherData(e.feature);
-        } //Om feature redan har hämtat värderinformation
-        else if (e.feature.getProperty('weather') !== "" && e.feature.getProperty('weather') !== undefined) {
-            var data = e.feature.getProperty('weather');
-            var content = "<span>Information:" + e.feature.getProperty('information') + "</span><br>" +
-                "<span>Väder:</span><img src=" + data.weather.icon + " style='width: 25px; height: 25px;'/>" +
-                "<span>" + data.temperature.temp + "</span>";
-            openInfoWindow(e.feature, content);
-        }//Annars om feature inte ska ha väderinformation - visa bara information
-        else {
-            var content = "<span>Information:" + e.feature.getProperty('information') + "</span>";
 
-            openInfoWindow(e.feature, content);
-        }
-    });
 
 
     showWeatherWidget(60.4866813, 15.4060031);
