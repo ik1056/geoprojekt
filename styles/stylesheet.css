@@ -176,9 +176,8 @@ aside.news-feed{
     }
     .back-arrow {
         position: absolute;
-        top: 0;
-        left: 0;
-        margin: 1em 3em;
+        top: -10px;
+        left: 10px;
         font-size:5em;
     }
     .login-container {
