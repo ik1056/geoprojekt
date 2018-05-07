@@ -216,9 +216,8 @@ $(document).ready(function () {
 
     showWeatherWidget(60.4866813, 15.4060031);
     $('#directions').on('click', function () {
-        $('#pac-input').hide();
-        $('#fromDestination').fadeIn();
-        $('#toDestination').fadeIn();
+        //$('#pac-input').hide();
+        $('#directions-container').toggle();
     });
     $('.directions').keypress(function (e) {
         var key = e.which;
