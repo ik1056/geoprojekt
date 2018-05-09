@@ -81,7 +81,7 @@ body {
 }
 .header-wrapper {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
 }
 .directions {
     margin-right: 15px;
