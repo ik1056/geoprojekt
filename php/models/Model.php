@@ -3,6 +3,7 @@
 class Model
 {
     public function addMarkerToDB($type, $coords, $info){
+
         $pdo = $this->getPDOConnection();
         $statement = $pdo->prepare("INSERT INTO features (type, coords, info) VALUES (:type, :coords, :info);");
         $statement->bindParam(':type',$type);
@@ -37,7 +38,8 @@ class Model
                         "coordinates" => array($lat, $lng)
                     ),
                     "properties" => array(
-                        "information" => utf8_encode($feature['info'])
+                        "information" => utf8_encode($feature['info']),
+                        "feature_id" => $feature['id']
                     )
                 )
             );
