@@ -204,8 +204,8 @@ aside.news-feed{
     display: flex;
     justify-content: center;
 }
-#btn_add, #btn_remove, #btn_update {
-    margin: 15px 15px;
+#btn_add, #btn_remove, #btn_update, #btn_db {
+    margin: 15px 11px;
 }
 .crud_inputs {
     width: 75%;
@@ -216,6 +216,5 @@ aside.news-feed{
 }
 .add_inputs textarea {
     resize:vertical;
-    height: 192px;
 }
 /* endregion admin */
