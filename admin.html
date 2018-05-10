@@ -37,15 +37,18 @@
         </div>
         <div class="crud_inputs container">
             <div class="add_inputs">
-                <input type="text" placeholder="Latitud">
-                <input type="text" placeholder="Longitud">
-                <textarea type="text" placeholder="Information"></textarea>
+                <input type="hidden" id="id">
+                <input type="text" placeholder="Latitud" class="form-control" id="lat">
+                <input type="text" placeholder="Longitud" class="form-control" id="lng">
+                <textarea type="text" placeholder="Information" class="form-control" id="info"></textarea>
             </div>
+            <!--
             <div class="update_inputs">
-                <input type="text" placeholder="Latitud">
-                <input type="text" placeholder="Longitud">
-                <textarea type="text" placeholder="Information"></textarea>
+                <input type="text" placeholder="Latitud" class="form-control">
+                <input type="text" placeholder="Longitud" class="form-control">
+                <textarea type="text" placeholder="Information" class="form-control"></textarea>
             </div>
+            -->
         </div>
     </div>
     <div id="map" style="height:50vh;"></div>
