@@ -16,6 +16,28 @@ class Model
         return 'done';
     }
 
+    public function removeMarker($id){
+        $pdo = $this->getPDOConnection();
+        $statement = $pdo->prepare("DELETE FROM features WHERE id = :id");
+        $statement->bindParam(":id", $id);
+        $statement->execute();
+        $pdo = null;
+
+        return 'done';
+    }
+
+    public function updateMarker($id, $coords, $info){
+        $pdo = $this->getPDOConnection();
+        $statement = $pdo->prepare("UPDATE features SET coords = :coords, info = :info WHERE id = :id");
+        $statement->bindParam(":id", $id);
+        $statement->bindParam(":coords", $coords);
+        $statement->bindParam(":info", $info);
+        $statement->execute();
+        $pdo = null;
+
+        return 'done';
+    }
+
     public function getMarkersFromDB(){
         $pdo = $this->getPDOConnection();
         $query = $pdo->query("SELECT * FROM features;");

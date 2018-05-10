@@ -10,6 +10,20 @@ class Controller
         return $model->addMarkerToDB($type, $coords, $info);
     }
 
+    public function removeMarker(){
+        $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
+        $model = new Model();
+        return $model->removeMarker($id);
+    }
+
+    public function updateMarker(){
+        $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
+        $coords = filter_input(INPUT_POST, 'coords', FILTER_SANITIZE_STRING);
+        $info = filter_input(INPUT_POST, 'info', FILTER_SANITIZE_STRING);
+        $model = new Model();
+        return $model->updateMarker($id, $coords, $info);
+    }
+
     public function getMarkers(){
         $model = new Model();
         return $model->getMarkersFromDB();
