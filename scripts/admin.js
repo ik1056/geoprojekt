@@ -116,7 +116,7 @@ $(function () {
             success: function(data) {
                 if (infowindow)
                     infowindow.close();
-                clearAllMarkers();
+                loadDataFromDB();
             },
             error: function(data) {
                 console.log('Error: '+ JSON.stringify(data));

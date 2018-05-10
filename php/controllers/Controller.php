@@ -34,6 +34,11 @@ class Controller
         return $model->updateDBFromCSV();
     }
 
+    public function updateCSVFromDB(){
+        $model = new Model();
+        return $model->updateCSVFromDB();
+    }
+
     public function getCurrentWeather(){
         $model = new Model();
         $lat = filter_input(INPUT_POST, 'lat', FILTER_SANITIZE_STRING);

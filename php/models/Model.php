@@ -50,8 +50,8 @@ class Model
         );
         foreach($res as $feature){
             $latlng = str_getcsv($feature['coords'], ',');
-            $lat = intval($latlng[0]);
-            $lng = intval($latlng[1]);
+            $lat = floatval($latlng[0]);
+            $lng = floatval($latlng[1]);
             array_push($features['features'],
                 array(
                     "type" => "Feature",
@@ -79,18 +79,34 @@ class Model
         $res = array();
         foreach($file as $line){
             $data = str_getcsv($line, ";");
-
-            $this->addMarkerToDB($data[0], $data[1], $data[2]);
-
+            $coords = $data[1];
+            $this->addMarkerToDB($data[0], $coords, $data[2]);
             array_push($res,
                 array(
                     'type' => utf8_encode($data[0]),
-                    'coords' => utf8_encode($data[1]),
+                    'coords' => $data[1],
                     'info' => utf8_encode($data[2])
                 )
             );
         }
         return $res;
+    }
+
+    public function updateCSVFromDB(){
+        file_put_contents("./dbs/backup.csv", "");
+        $file = fopen("./dbs/backup.csv", "a");
+        $data = $this->getMarkersFromDB();
+        foreach($data['features'] as $d){
+            $line = array("type" => 'Point',
+                "coords" => $d['geometry']['coordinates'][0] .",". $d['geometry']['coordinates'][1],
+                "info" => $d['properties']['information']);
+            fputcsv($file, $line, ";");
+        }
+
+        fclose($file);
+
+        return "done";
+
     }
 
     public function getCurrentWeather($lat, $lng){
