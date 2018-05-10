@@ -182,6 +182,8 @@ function initMap() {
                 title: place.name,
                 position: place.geometry.location
             }));
+            $('#lat').val(place.geometry.location.lat);
+            $('#lng').val(place.geometry.location.lng);
             if (place.geometry.viewport) {
                 // Only geocodes have viewport.
                 bounds.union(place.geometry.viewport);
@@ -203,6 +205,14 @@ function initMap() {
     google.maps.event.addListener(map.data, 'click', function (e) {
 
     });
+
+    map.addListener('click', function(event) {
+        var lat = event.latLng.lat();
+        var lng = event.latLng.lng();
+        $('#lat').val(lat);
+        $('#lng').val(lng);
+    });
+
 
     loadDataFromDB();
 }
