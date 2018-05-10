@@ -21,6 +21,20 @@ $(function () {
             }
         })
     });
+    $('#btn_csv').click(function() {
+       $.ajax({
+           type: 'POST',
+           url: './php/route.php',
+           data: {'controller' :'Controller', 'function': 'updateCSVFromDB'},
+           dataType: 'json',
+           success: function(data) {
+
+           },
+           error: function(data) {
+               console.log(JSON.stringify(data));
+           }
+       })
+    });
 
     $('#btn_add').click(function(){
         //Kontrollera ifall input är tomt
@@ -212,8 +226,6 @@ function initMap() {
         $('#lat').val(lat);
         $('#lng').val(lng);
     });
-
-
     loadDataFromDB();
 }
 
