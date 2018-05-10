@@ -93,6 +93,23 @@ $(function () {
         })
     });
 
+    $('#btn_db').click(function(){
+        $.ajax({
+            type: 'POST',
+            url: './php/route.php',
+            data: {'controller': 'Controller', 'function' :'updateDBFromCSV'},
+            dataType: 'json',
+            success: function(data) {
+                if (infowindow)
+                    infowindow.close();
+                clearAllMarkers();
+            },
+            error: function(data) {
+                console.log('Error: '+ JSON.stringify(data));
+            }
+        })
+    });
+
     function getCookie(name) {
         var value = "; " + document.cookie;
         var parts = value.split("; " + name + "=");
