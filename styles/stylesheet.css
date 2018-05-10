@@ -200,11 +200,14 @@ aside.news-feed{
 /* endregion login */
 
 /* region admin */
+#admin-container {
+    background: #222;
+}
 .crud {
     display: flex;
     justify-content: center;
 }
-#btn_add, #btn_remove, #btn_update, #btn_db {
+#btn_add, #btn_remove, #btn_update, #btn_db, #btn_csv {
     margin: 15px 11px;
 }
 .crud_inputs {
