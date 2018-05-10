@@ -44,11 +44,6 @@ class Model
         $res = $query->fetchAll();
         $pdo = null;
 
-        if(count($res) <= 0){
-            $this->updateDBFromCSV();
-            return $this->getMarkersFromDB();
-        }
-
         $features = array(
             "type" => "FeatureCollection",
             "features" => array()
