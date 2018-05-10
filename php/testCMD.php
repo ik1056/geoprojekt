@@ -11,7 +11,8 @@ ini_set('display_errors', 1);
 include 'models/Model.php';
 
 $m = new Model();
-echo $m->login("admin", "123");
+echo $m->updateCSVFromDB();
+echo $m->updateDBFromCSV();
 ?>
 <!--<script> //console.log(<?=$m->getMarkersFromDB()?>); </script>-->
 
