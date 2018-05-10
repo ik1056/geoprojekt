@@ -125,22 +125,16 @@ function initMap() {
         }
     });
     google.maps.event.addListener(map.data, 'click', function (e) {
-        //Kollar om feature ska hämta värderinformation.
-        if (e.feature.getProperty('weather') !== undefined && e.feature.getProperty('weather') === "") {
-            getWeatherData(e.feature);
-        } //Om feature redan har hämtat värderinformation
-        else if (e.feature.getProperty('weather') !== "" && e.feature.getProperty('weather') !== undefined) {
-            var data = e.feature.getProperty('weather');
-            var content = "<span>Information:" + e.feature.getProperty('information') + "</span><br>" +
-                "<span>Väder:</span><img src=" + data.weather.icon + " style='width: 25px; height: 25px;'/>" +
-                "<span>" + data.temperature.temp + "</span>";
-            openInfoWindow(e.feature, content);
-        }//Annars om feature inte ska ha väderinformation - visa bara information
-        else {
-            var content = "<span>Information:" + e.feature.getProperty('information') + "</span>";
+        var id = e.feature.getProperty('id');
+        var marker = getMarkerById(id);
 
-            openInfoWindow(e.feature, content);
-        }
+        $('#id').val(id);
+        $('#lat').val(marker.position.lat);
+        $('#lng').val(marker.position.lng);
+        $('#info').val(marker.content);
+
+        var content = "<span>Information:" + e.feature.getProperty('information') + "</span>";
+        openInfoWindow(e.feature, content);
     });
 
     loadDataFromDB();
@@ -193,15 +187,11 @@ function setMarkers(data) {
         var feature = new google.maps.Data.Feature();
         feature.setGeometry(c);
         feature.setProperty("information", marker.content);
-        feature.setProperty("id", mymarkers.length);
+        feature.setProperty("id", f.properties.feature_id);
 
         marker.feature = feature;
         mymarkers.push(marker);
         map.data.add(feature);
-        marker.addListener('click', function () {
-            var content = "<span>Information:" + marker.feature.getProperty('information') + "</span><a href'#'>ASdasdasd</a>";
-            openInfoWindow(feature, content);
-        });
     }
 }
 function getMarkerById(id) {
