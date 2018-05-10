@@ -38,7 +38,8 @@ $(function () {
             data: {'controller': 'Controller', 'function': 'addMarker', 'coords': coords, 'info': info},
             dataType: 'json',
             success:function(e){
-               console.log(e);
+                console.log(e);
+                loadDataFromDB();
             },
             error:function(e){
                 console.log(JSON.stringify(e));
@@ -62,6 +63,7 @@ $(function () {
             dataType: 'json',
             success: function(data) {
                 console.log(data);
+                loadDataFromDB();
             },
             error: function(data) {
                 console.log('Error: '+ JSON.stringify(data));
@@ -78,7 +80,11 @@ $(function () {
             data: {'controller': 'Controller', 'function' :'removeMarker', 'id' : id},
             dataType: 'json',
             success: function(data) {
+                if (infowindow)
+                    infowindow.close();
                 console.log(data);
+                getMarkerById(id).setMap(null);
+                removeMarkerById(id);
             },
             error: function(data) {
                 console.log('Error: '+ JSON.stringify(data));
@@ -177,16 +183,7 @@ function initMap() {
         }
     });
     google.maps.event.addListener(map.data, 'click', function (e) {
-        var id = e.feature.getProperty('id');
-        var marker = getMarkerById(id);
 
-        $('#id').val(id);
-        $('#lat').val(marker.position.lat);
-        $('#lng').val(marker.position.lng);
-        $('#info').val(marker.content);
-
-        var content = "<span>Information:" + e.feature.getProperty('information') + "</span>";
-        openInfoWindow(e.feature, content);
     });
 
     loadDataFromDB();
@@ -206,6 +203,9 @@ function openInfoWindow(feature, data) {
 }
 
 function loadDataFromDB() {
+    clearAllMarkers();
+    mymarkers = [];
+
     $.ajax({
         type: "POST",
         url: "./php/route.php",
@@ -241,9 +241,39 @@ function setMarkers(data) {
         feature.setProperty("information", marker.content);
         feature.setProperty("id", f.properties.feature_id);
 
+        marker.addListener('click', function(e){
+            var id = this.id;
+            $('#id').val(id);
+            $('#lat').val(this.position.lat);
+            $('#lng').val(this.position.lng);
+            $('#info').val(this.content);
+
+            var content = "<span>Information:" + this.feature.getProperty('information') + "</span>";
+            openInfoWindow(this.feature, content);
+        });
         marker.feature = feature;
         mymarkers.push(marker);
-        map.data.add(feature);
+        //map.data.add(feature);
+    }
+}
+
+function clearAllMarkers(){
+    if (infowindow)
+        infowindow.close();
+    for (var i = 0; i < mymarkers.length; i++) {
+        if (mymarkers[i].id === id) {
+            mymarkers[i].setMap(null);
+        }
+    }
+}
+
+function removeMarkerById(id){
+    var tempMarkers = mymarkers;
+    for (var i = 0; i < tempMarkers.length; i++) {
+        if (tempMarkers[i].id === id) {
+            delete mymarkers[i];
+            break;
+        }
     }
 }
 function getMarkerById(id) {
