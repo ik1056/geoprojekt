@@ -24,7 +24,7 @@ $(function () {
 
     $('#btn_add').click(function(){
         //Kontrollera ifall input är tomt
-        var lat = $('#lat').val(), lng = $('#lng').val(), info = $('#info').val();
+       var lat = $('#lat').val(), lng = $('#lng').val(), info = $('#info').val();
        if(lat === "" || lng === "" || info === "")
        {
            alert("Fältet får inte vara tomt");
@@ -47,11 +47,43 @@ $(function () {
     });
 
     $('#btn_update').click(function(){
+        var id = $('#id').val();
+        var lat = $('#lat').val(), lng = $('#lng').val(), info = $('#info').val();
+        if(lat === "" || lng === "" || info === "")
+        {
+            alert("Fältet får inte vara tomt");
+            return;
+        }
+        var coords = lng + "," + lat;
+        $.ajax({
+            type: 'POST',
+            url: './php/route.php',
+            data: {'controller': 'Controller', 'function' : 'updateMarker', 'id' : id, 'coords' : coords, 'info' : info},
+            dataType: 'json',
+            success: function(data) {
+                console.log(data);
+            },
+            error: function(data) {
+                console.log('Error: '+ JSON.stringify(data));
+            }
+        })
 
     });
 
     $('#btn_remove').click(function(){
-
+        var id = $('#id').val();
+        $.ajax({
+            type: 'POST',
+            url: './php/route.php',
+            data: {'controller': 'Controller', 'function' :'removeMarker', 'id' : id},
+            dataType: 'json',
+            success: function(data) {
+                console.log(data);
+            },
+            error: function(data) {
+                console.log('Error: '+ JSON.stringify(data));
+            }
+        })
     });
 
     function getCookie(name) {
