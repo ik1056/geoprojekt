@@ -63,6 +63,7 @@ $(function () {
             dataType: 'json',
             success: function(data) {
                 console.log(data);
+                getMarkerById(id).setMap(null);
                 loadDataFromDB();
             },
             error: function(data) {
@@ -204,7 +205,6 @@ function openInfoWindow(feature, data) {
 
 function loadDataFromDB() {
     clearAllMarkers();
-    mymarkers = [];
 
     $.ajax({
         type: "POST",
@@ -265,6 +265,7 @@ function clearAllMarkers(){
             mymarkers[i].setMap(null);
         }
     }
+    mymarkers = [];
 }
 
 function removeMarkerById(id){

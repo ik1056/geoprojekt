@@ -1,7 +1,8 @@
 var map;
 var infowindow;
+var infoWindow;
 var mymarkers = [];
-var showNews = true;
+var showNews = false;
 
 function initMap() {
     var uluru = {lat: 60.1389958, lng: 15.1629542};
@@ -47,12 +48,80 @@ function initMap() {
                 scaledSize: new google.maps.Size(25, 25)
             };
             // Create a marker for each place.
-            markers.push(new google.maps.Marker({
+            var marker = new google.maps.Marker({
                 map: map,
                 icon: icon,
                 title: place.name,
                 position: place.geometry.location
-            }));
+            });
+            markers.push(marker);
+
+            var service = new google.maps.places.PlacesService(map);
+
+            service.getDetails({
+                placeId: place.place_id
+            }, function(place, status) {
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                    var mark = markers[markers.length - 1];
+
+                    google.maps.event.addListener(mark, 'click', function () {
+                        if (infoWindow) {
+                            infoWindow.close();
+                        }
+                        infoWindow = new google.maps.InfoWindow();
+
+                        var opts = google.maps.places.PhotoOptions;
+                        opts = {
+                            maxHeight: 160,
+                            maxWidth: 90
+                        };
+                        var content = "<h4>" + place.name + "<small> " + place.rating + "</small></h4>";
+                        if (place.opening_hours)
+                            content += "<span class='badge badge-success'>Öppet</span><br><p>" + place.formatted_address + "</p>";
+                        else
+                            content += "<span class='badge badge-danger'>Stängt</span><br><p>" + place.formatted_address + "</p>";
+                        if (place.photos && place.photos.length > 0) {
+                            var photo = place.photos[0].getUrl(opts);
+                            content += "<img src=" + photo + " class='rounded' style='margin-bottom: 15px;'>";
+                        }
+                        if (place.reviews && place.reviews.length > 0) {
+                            content += "<div class='col-12' style='overflow-x: hidden; max-height: 200px; overflow-y: scroll;'>";
+                            for (var j = 0; j < place.reviews.length; ++j) {
+                                var name = place.reviews[j].author_name;
+                                var rating = place.reviews[j].rating;
+                                var text = place.reviews[j].text;
+                                var profilepic = place.reviews[j].profile_photo_url;
+                                var url = place.reviews[j].author_url;
+                                console.log(profilepic);
+
+                                content += "<div class=''>";
+                                content += "<div class='col-2'>";
+                                content += "<img src='" + profilepic + "' style=' height:35px;'/>";
+                                content += "</div>";
+                                content += "<div class='col-10'>";
+                                content += "<h6><a href='" + url + "' target='_blank'>" + name + "</a></h6>";
+                                content += "<span>";
+                                for (var i = 0; i < 5; i++) {
+                                    if (i < rating)
+                                        content += "<i class='fas fa-star'></i>";
+                                    else
+                                        content += "<i class='far fa-star'></i>"
+                                }
+                                content += "</span>";
+                                content += "<p>" + text + "</p>";
+                                content += "</div>" +
+                                    "</div>";
+                            }
+                            content += "</div>";
+                        }
+                        infoWindow.setContent(content);
+                        infoWindow.setPosition(mark.position);
+                        infoWindow.setOptions({pixelOffset: new google.maps.Size(-2, -25)});
+                        infoWindow.open(map);
+                        console.log(place);
+                    });
+                }
+            });
             if (place.geometry.viewport) {
                 // Only geocodes have viewport.
                 bounds.union(place.geometry.viewport);
@@ -258,6 +327,7 @@ function showWeatherWidget(lat, lng) {
 
 function showDirections() {
     $('#news-rss').empty();
+    showNews = false;
     if (typeof directionsDisplay != 'undefined') {
         directionsDisplay.setMap(null);
     }
@@ -271,7 +341,8 @@ function showDirections() {
     directionsService.route({
         origin: start,
         destination: end,
-        travelMode: travelChoice
+        travelMode: travelChoice,
+        provideRouteAlternatives: true
     }, function (response, status) {
         if (status === 'OK') {
             directionsDisplay.setDirections(response);
@@ -300,9 +371,7 @@ function getStationsInZone(lat, lng) {
 }
 
 function toggleTrafficMarkers() {
-    if(showNews) {
-
-
+    if(!showNews) {
         $.support.cors = true;
         var test =
             "<REQUEST>" +
@@ -476,12 +545,12 @@ function toggleTrafficMarkers() {
                 console.log(JSON.stringify(data));
             }
         });
-        showNews = false;
+        showNews = true;
     }
     else{
         $('#news-rss').empty();
         clearNewsMarkers();
-        showNews = true;
+        showNews = false;
     }
 
 }
