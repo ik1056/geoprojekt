@@ -198,3 +198,24 @@ aside.news-feed{
     }
 
 /* endregion login */
+
+/* region admin */
+.crud {
+    display: flex;
+    justify-content: center;
+}
+#btn_add, #btn_remove, #btn_update {
+    margin: 15px 15px;
+}
+.crud_inputs {
+    width: 75%;
+    padding: 15px;
+}
+.add_inputs input, .add_inputs textarea, .update_inputs input, .update_inputs textarea   {
+    margin: 10px;
+}
+.add_inputs textarea {
+    resize:vertical;
+    height: 192px;
+}
+/* endregion admin */
