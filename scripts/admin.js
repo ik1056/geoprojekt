@@ -23,7 +23,27 @@ $(function () {
     });
 
     $('#btn_add').click(function(){
+        //Kontrollera ifall input är tomt
+        var lat = $('#lat').val(), lng = $('#lng').val(), info = $('#info').val();
+       if(lat === "" || lng === "" || info === "")
+       {
+           alert("Fältet får inte vara tomt");
+           return;
+       }
+        var coords = lng + "," + lat;
 
+        $.ajax({
+            type: 'POST',
+            url: './php/route.php',
+            data: {'controller': 'Controller', 'function': 'addMarker', 'coords': coords, 'info': info},
+            dataType: 'json',
+            success:function(e){
+               console.log(e);
+            },
+            error:function(e){
+                console.log(JSON.stringify(e));
+            }
+        });
     });
 
     $('#btn_update').click(function(){

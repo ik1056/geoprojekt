@@ -38,7 +38,7 @@ class Model
                         "coordinates" => array($lat, $lng)
                     ),
                     "properties" => array(
-                        "information" => utf8_encode($feature['info']),
+                        "information" => $feature['info'],
                         "feature_id" => $feature['id']
                     )
                 )

@@ -2,7 +2,7 @@
 class Controller
 {
     public function addMarker(){
-        $type = filter_input(INPUT_POST, 'type', FILTER_SANITIZE_STRING);
+        $type = "Point";
         $coords = filter_input(INPUT_POST, 'coords', FILTER_SANITIZE_STRING);
         $info = filter_input(INPUT_POST, 'info', FILTER_SANITIZE_STRING);
 
