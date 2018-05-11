@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <meta charset="UTF-8">
-<title>Karta</title>
+<title>Adminpanel</title>
 
 <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 <link rel="stylesheet" href="plugins/styles/bootstrap.min.css">
@@ -14,8 +14,8 @@
 <script src="plugins/scripts/bootstrap.min.js"></script>
 <script src="//code.jquerygeo.com/jquery.geo-1.0.0-rc1.min.js"></script>
 
-<script src="scripts/main.js"></script>
 <script src="scripts/rss.js"></script>
+<script src="scripts/admin.js"></script>
 <body>
 <a href="map.html" class="back-arrow"><i class="fas fa-arrow-left"></i></a>
 <div id="login-container" class="container" style="display: none;">
@@ -28,42 +28,36 @@
         <button id="btn_login" class="btn btn-primary">Logga in</button>
     </div>
 </div>
-<script type="text/javascript">
-    $(function() {
-        $('#btn_login').on('click', function() {
-           var username = $('#username').val();
-           var password = $('#password').val();
-           $.ajax({
-               type: 'POST',
-               url: './php/route.php',
-               data: {'controller' : 'Controller', 'function' : 'login', 'username' : username, 'password' : password},
-               dataType: 'json',
-               success: function(data) {
-                   if(data === "success"){
-                       var d = new Date();
-                       var hours = 24;
-                       d.setTime(d.getTime() + (hours*60*60*1000));
-                       document.cookie = "loggedin=true; expires="+d.toUTCString()+";";
-                       location.reload();
-                   }
-               },
-               error: function(data) {
-                   console.log('Error: '+JSON.stringify(data));
-               }
-           })
-        });
-        function getCookie(name){
-            var value = "; " + document.cookie;
-            var parts = value.split("; " + name + "=");
-            if (parts.length == 2) return parts.pop().split(";").shift();
-        }
-        if(getCookie("loggedin")){
-            $('#login-container').hide();
-        }
-        else{
-            $('#login-container').show();
-        }
-    });
+<div id="admin-container" class="container-fluid">
+    <div class="container" style="height:40vh;">
+        <div class="crud container">
+            <button id="btn_add" class="btn btn-primary">Lägg till</button>
+            <button id="btn_remove" class="btn btn-primary">Ta bort</button>
+            <button id="btn_update" class="btn btn-primary">Uppdatera</button>
+            <button id="btn_db" class="btn btn-success">Uppdatera databas</button>
+            <button id="btn_csv" class="btn btn-success">Uppdatera CSV</button>
+            <input id="pac-input" class="controls form-control search-bar pull-left" type="text" placeholder="Sök.." style="margin:15px; width:32%">
+        </div>
+        <div class="crud_inputs container">
+            <div class="add_inputs">
+                <input type="hidden" id="id">
+                <input type="text" placeholder="Latitud" class="form-control" id="lat">
+                <input type="text" placeholder="Longitud" class="form-control" id="lng">
+                <textarea type="text" placeholder="Information" class="form-control" id="info"></textarea>
+            </div>
+            <!--
+            <div class="update_inputs">
+                <input type="text" placeholder="Latitud" class="form-control">
+                <input type="text" placeholder="Longitud" class="form-control">
+                <textarea type="text" placeholder="Information" class="form-control"></textarea>
+            </div>
+            -->
+        </div>
+    </div>
+    <div id="map" style="height:60vh;"></div>
+</div>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDAdu-grVslsoip9o-QATM_fY56zjCfyQ&callback=initMap&libraries=places">
 </script>
 </body>
 </html>

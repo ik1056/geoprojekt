@@ -7,6 +7,10 @@
     user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
 }
+body {
+    transition: all 0.2s ease-in-out;
+    -webkit-transition: all 0.2s ease-in-out;
+}
 /* endregion all */
 /* region index */
 .index-header {
@@ -68,24 +72,20 @@
 }
 /* endregion index */
 /* region map */
-#login-map-view {
-    position: fixed;
-    top: 0;
-    left: 0;
-    margin: 1em;
-    text-align: center;
-    font-size: 1em;
-}
 #login:hover {
-    text-decoration: none;
-    transition: background 0.2s linear;
-}
+     text-decoration: none;
+     transition: background 0.2s linear;
+ }
 .map-header {
     margin-top: 1.5em;
 }
 .header-wrapper {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
+}
+.directions {
+    margin-right: 15px;
+    width: 20%;
 }
 .search-bar {
     width: 50%;
@@ -126,15 +126,14 @@
     width: 65%;
 }
 #map {
-    height: 91vh;
+    height: 89vh;
 }
 
 .traffic-news-item {
-    max-height: 30vh;
-    overflow: auto;
-    padding: 1em;
-    border-radius: 5px;
-    border: solid #d3d3d3;
+    margin-right: 15px;
+    padding: .75em;
+    border-radius: 2px;
+    border: 1px solid #d3d3d3;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -142,8 +141,14 @@
 a:hover {
     text-decoration: none !important;
 }
+aside.news-feed{
+    padding-left: 0px !important;
+}
 .news-item {
-    margin:5em;
+    overflow: hidden;
+    margin-bottom: 7.5px;
+    margin-left: 5px;
+    margin-right: 15px;
 }
 .traffic-rss-header {
     display: flex;
@@ -153,6 +158,19 @@ a:hover {
 .traffic-rss-footer {
     display: flex;
     justify-content: space-between;
+}
+
+#traffic-container{
+    display: none;
+    height: 25vh;
+}
+#directions-container{
+    height: 0;
+    margin: 15px;
+    width: 97%;
+}
+#directions-container select {
+    margin-right: 10px;
 }
 
 /* endregion map */
@@ -167,9 +185,8 @@ a:hover {
     }
     .back-arrow {
         position: absolute;
-        top: 0;
-        left: 0;
-        margin: 1em 3em;
+        top: -10px;
+        left: 10px;
         font-size:5em;
     }
     .login-container {
@@ -181,3 +198,26 @@ a:hover {
     }
 
 /* endregion login */
+
+/* region admin */
+#admin-container {
+    background: #222;
+}
+.crud {
+    display: flex;
+    justify-content: center;
+}
+#btn_add, #btn_remove, #btn_update, #btn_db, #btn_csv {
+    margin: 15px 11px;
+}
+.crud_inputs {
+    width: 75%;
+    padding: 15px;
+}
+.add_inputs input, .add_inputs textarea, .update_inputs input, .update_inputs textarea   {
+    margin: 10px;
+}
+.add_inputs textarea {
+    resize:vertical;
+}
+/* endregion admin */

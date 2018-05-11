@@ -2,12 +2,26 @@
 class Controller
 {
     public function addMarker(){
-        $type = filter_input(INPUT_POST, 'type', FILTER_SANITIZE_STRING);
+        $type = "Point";
         $coords = filter_input(INPUT_POST, 'coords', FILTER_SANITIZE_STRING);
         $info = filter_input(INPUT_POST, 'info', FILTER_SANITIZE_STRING);
 
         $model = new Model();
         return $model->addMarkerToDB($type, $coords, $info);
+    }
+
+    public function removeMarker(){
+        $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
+        $model = new Model();
+        return $model->removeMarker($id);
+    }
+
+    public function updateMarker(){
+        $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
+        $coords = filter_input(INPUT_POST, 'coords', FILTER_SANITIZE_STRING);
+        $info = filter_input(INPUT_POST, 'info', FILTER_SANITIZE_STRING);
+        $model = new Model();
+        return $model->updateMarker($id, $coords, $info);
     }
 
     public function getMarkers(){
@@ -18,6 +32,11 @@ class Controller
     public function updateDBFromCSV(){
         $model = new Model();
         return $model->updateDBFromCSV();
+    }
+
+    public function updateCSVFromDB(){
+        $model = new Model();
+        return $model->updateCSVFromDB();
     }
 
     public function getCurrentWeather(){

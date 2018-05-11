@@ -19,6 +19,28 @@ class Model
         return 'done';
     }
 
+    public function removeMarker($id){
+        $pdo = $this->getPDOConnection();
+        $statement = $pdo->prepare("DELETE FROM features WHERE id = :id");
+        $statement->bindParam(":id", $id);
+        $statement->execute();
+        $pdo = null;
+
+        return 'done';
+    }
+
+    public function updateMarker($id, $coords, $info){
+        $pdo = $this->getPDOConnection();
+        $statement = $pdo->prepare("UPDATE features SET coords = :coords, info = :info WHERE id = :id");
+        $statement->bindParam(":id", $id);
+        $statement->bindParam(":coords", $coords);
+        $statement->bindParam(":info", $info);
+        $statement->execute();
+        $pdo = null;
+
+        return 'done';
+    }
+
     //Funktion för att hämta ut alla punkter ur databasen.
     // Dessa punkter returneras i form av GeoJSON - se http://geojson.org för mer information.
     public function getMarkersFromDB(){
@@ -37,9 +59,9 @@ class Model
             //Koordinaterna är sparade som en sträng där latitud och longitud separeras med ett kommatecken
             // t.ex. '63,12'
             $latlng = str_getcsv($feature['coords'], ',');
-            $lat = intval($latlng[0]);
-            $lng = intval($latlng[1]);
             //Bygg upp en Feature baserat på det resultat som kom från databasen.
+            $lat = floatval($latlng[0]);
+            $lng = floatval($latlng[1]);
             array_push($features['features'],
                 array(
                     "type" => "Feature",
@@ -48,7 +70,8 @@ class Model
                         "coordinates" => array($lat, $lng)
                     ),
                     "properties" => array(
-                        "information" => utf8_encode($feature['info'])
+                        "information" => $feature['info'],
+                        "feature_id" => $feature['id']
                     )
                 )
             );
@@ -79,12 +102,29 @@ class Model
             array_push($res,
                 array(
                     'type' => utf8_encode($data[0]),
-                    'coords' => utf8_encode($data[1]),
+                    'coords' => $data[1],
                     'info' => utf8_encode($data[2])
                 )
             );
         }
         return $res;
+    }
+
+    public function updateCSVFromDB(){
+        file_put_contents("./dbs/backup.csv", "");
+        $file = fopen("./dbs/backup.csv", "a");
+        $data = $this->getMarkersFromDB();
+        foreach($data['features'] as $d){
+            $line = array("type" => 'Point',
+                "coords" => $d['geometry']['coordinates'][0] .",". $d['geometry']['coordinates'][1],
+                "info" => $d['properties']['information']);
+            fputcsv($file, $line, ";");
+        }
+
+        fclose($file);
+
+        return "done";
+
     }
 
     //Funktion för att hämta värderinformation baserat på koordinater.
@@ -111,7 +151,7 @@ class Model
     //Om användaren finns kommer "success" att returneras - annars "error".
     //Lösenord är hashade enligt B-CRYPT.
     public function login($username, $password){
-        $usr = $username;
+        $usr = strtolower($username);
         $pwd = $password;
         $pdo = $this->getPDOConnection();
         //Hämtar endast det krypterade lösenordet där username är detsamma som input.
