@@ -19,6 +19,7 @@ spl_autoload_register(function ($className) {
     }
 });
 
+//Route-fil som returnerar JSON-data baserat på den input som kom i _POST-variabeln.
 if (isset($_POST['controller']) && isset($_POST['function'])){
     $controller = $_POST['controller'];
     $function = $_POST['function'];
