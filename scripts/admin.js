@@ -339,9 +339,7 @@ function clearAllMarkers(){
         infowindow.close();
     // loopar igenom arrayen och tar bort varje marker på id.
     for (var i = 0; i < mymarkers.length; i++) {
-        if (mymarkers[i].id === id) {
-            mymarkers[i].setMap(null);
-        }
+        mymarkers[i].setMap(null);
     }
     mymarkers = [];
 }
@@ -355,9 +353,9 @@ function removeMarkerById(id){
             break;
         }
     }
+    tempMarkers = null;
 }
-// Hjälpfunktion som hämtar markers på ID.
-// Funktionen används vid sammankoppling av nyheter och markörer.
+// Hjälpfunktion som hämtar marker på ID.
 function getMarkerById(id) {
     for (var i = 0; i < mymarkers.length; i++) {
         if (mymarkers[i].id === id) {
