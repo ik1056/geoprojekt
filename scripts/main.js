@@ -4,7 +4,11 @@ var infoWindow;
 var mymarkers = [];
 var showNews = false;
 
+//Callback funktion från Google Maps API:et.
+//Funktionen skapar upp kartan och aktiverar SearchBox-plugin:et från Google Maps API.
+//När allt från Google Maps API är klart så hämtas informationen som finns lagrad i databasen genom loadDatafromDB().
 function initMap() {
+    //Bygger upp kartan.
     var uluru = {lat: 60.1389958, lng: 15.1629542};
     map = new google.maps.Map(document.getElementById('map'), {
         zoom: 4,
@@ -14,11 +18,10 @@ function initMap() {
             style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR
         }
     });
-    // Create the search box and link it to the UI element.
+    //Hämtar sökrutan och sparar den i input-variabeln.
     var input = document.getElementById('pac-input');
+    //Skapar en sökruta enligt Google Maps API.
     var searchBox = new google.maps.places.SearchBox(input);
-
-    // Bias the SearchBox results towards current map's viewport.
     map.addListener('bounds_changed', function () {
         searchBox.setBounds(map.getBounds());
     });
@@ -132,7 +135,7 @@ function initMap() {
         map.fitBounds(bounds);
     });
 
-
+    //Event-hanterare för de träffar som genererades från Sökrutan.
     var bounds = new google.maps.LatLngBounds();
     google.maps.event.addListener(map.data, 'addfeature', function (e) {
         if (e.feature.getGeometry().getType() === 'Point') {
@@ -159,9 +162,12 @@ function initMap() {
         }
     });
 
+    //Hämta data som finns i databasen.
     loadDataFromDB();
 }
 
+//Funktion för att hämta värderdata från databasen.
+//Data hämtas genom ett Ajax-anrop mot Route-filen.
 function getWeatherData(feature) {
     var lat = feature.getGeometry().get().lat();
     var lng = feature.getGeometry().get().lng();
@@ -182,6 +188,8 @@ function getWeatherData(feature) {
     });
 }
 
+//Hjälpfunktion för att öppna en info-ruta och stänga den som redan är öppen.
+//Funktionen tar en Feature, d.v.s markören där inforutan ska öppnas och även den data som ska visas i rutan.
 function openInfoWindow(feature, data) {
     if (infowindow) {
         infowindow.close();
@@ -195,6 +203,7 @@ function openInfoWindow(feature, data) {
     infowindow.open(map);
 }
 
+//Funktion för att hämta all data från databasen.
 function loadDataFromDB() {
     $.ajax({
         type: "POST",
@@ -202,9 +211,7 @@ function loadDataFromDB() {
         data: {"controller": "Controller", "function": "getMarkers"},
         dataType: "json",
         success: function (data) {
-            //console.log(map.data.addGeoJson(data, {
-            // idPropertyName: "Id"
-            // }));
+            //Skapa alla markers och säg att markören ska innehålla väderdata.
             setMarkers(data, true);
         },
         error: function (data) {
@@ -213,15 +220,19 @@ function loadDataFromDB() {
     });
 }
 
-//Skapa en feature och lägg till den i en array över alla markers.
+//Funktion för att skapa markörer och lägga till dem i en array över alla markers.
+//Funktionen tar emot data, d.v.s det som ska visas när man klickar på en markör och även om markören innehåller värderinformation.
 function setMarkers(data, hasWeather) {
     for (var i = 0; i < data.features.length; i++) {
         var f = data.features[i];
         var g = data.features[i].geometry;
         var c = {lat: g.coordinates[1], lng: g.coordinates[0]};
         var img = null;
+        //Om det inte ska innehålla väder så sätter vi en annan ikon.
+        //T.ex. en varning för trafikolyckor.
         if (!hasWeather)
             img = "./assets/warningSmall.png";
+        //Bygger upp en ny markör.
         var marker = new google.maps.Marker({
             position: c,
             icon: img,
@@ -233,10 +244,12 @@ function setMarkers(data, hasWeather) {
             isNews: false
         });
 
+        //Skapar en ny feature som vår markör kopplas till.
         var feature = new google.maps.Data.Feature();
         feature.setGeometry(marker.position);
         feature.setProperty("information", marker.content);
         feature.setProperty("id", mymarkers.length);
+        //Om markören innehåller väder så är det inte för trafiknyheter, alltså är det bara en Feature och ingen Marker som visas på kartan.
         if (hasWeather) {
             feature.setProperty("weather", "");
             map.data.add(feature);
@@ -254,6 +267,8 @@ function setMarkers(data, hasWeather) {
     }
 }
 
+//Hjälpfunktion för att hämta ut en markör baserat på dess ID.
+//Funktionen används vid sammankoppling av nyheter och markörer.
 function getMarkerById(id) {
     for (var i = 0; i < mymarkers.length; i++) {
         if (mymarkers[i].id === id) {
@@ -262,13 +277,13 @@ function getMarkerById(id) {
     }
 }
 
+//Rensa alla markörer för nyheter.
 function clearNewsMarkers(){
     var deleteMarkers = [];
     for(var i = 0; i < mymarkers.length; i++){
         if(mymarkers[i].isNews)
             deleteMarkers.push(mymarkers[i]);
     }
-
 
     mymarkers = mymarkers.filter( function( el ) {
         return !deleteMarkers.includes( el );
@@ -280,22 +295,21 @@ function clearNewsMarkers(){
 }
 
 $(document).ready(function () {
-
-
-
+    //Visar värderinformation över Borlänge på hemsidan.
     showWeatherWidget(60.4866813, 15.4060031);
+
     $('#directions').on('click', function () {
-        //$('#pac-input').hide();
         $('#directions-container').toggleClass('hidden');
     });
     $('#calc-route').click(function(){
         showDirections();
     });
-
     $('#traffic-info').click(function () {
         toggleTrafficMarkers();
     });
+    //När man klickar på en nyhet i nyhetsflödet så kommer man att tas till platsen där nyheten gäller och sedan öppna dess inforuta.
     $('#news-rss').on('click', 'a[class=news-item]', function (e) {
+        //ID:t över nyheten sparas i ett data-attribut.
         var id = e.currentTarget.dataset.newsId;
         if (id !== undefined) {
             var m = getMarkerById(id);
@@ -308,6 +322,9 @@ $(document).ready(function () {
     });
 });
 
+//Funktion för att visa värdret över en specifik plats.
+//Denna funktion är bara till för att ändra värderinformationen som är statisk på sidan och har därmed
+//inget att göra med markörernas värderinformation.
 function showWeatherWidget(lat, lng) {
     $.ajax({
         type: "POST",
@@ -325,6 +342,9 @@ function showWeatherWidget(lat, lng) {
     });
 }
 
+//Funktion för att beräkna en rutt mellan 2 punkter.
+//Dessa punkter hämtas genom 2st input-fält.
+//Om alternativa rutter finns kommer dessa att visas som extrainformation i rutt-beskrivningen.
 function showDirections() {
     $('#news-rss').empty();
     showNews = false;
@@ -370,10 +390,12 @@ function getStationsInZone(lat, lng) {
     })
 }
 
+//Funktion för att hämta eller stänga trafikinformationen på sidan.
+//Informationen hämtas från trafikverkets API genom att skicka iväg XML-data i POST via Ajax.
 function toggleTrafficMarkers() {
     if(!showNews) {
         $.support.cors = true;
-        var test =
+        var query =
             "<REQUEST>" +
             "<LOGIN authenticationkey='88597617d8524d5e9baf509b2b92a968' />" +
             "<QUERY objecttype='Situation' limit='10'>" +
@@ -404,14 +426,14 @@ function toggleTrafficMarkers() {
             "</QUERY>" +
             "</REQUEST>";
 
-        //test
+        //Bygger upp alla nyheter.
         $('#news-rss').empty();
         $.ajax({
             type: "POST",
             url: "http://api.trafikinfo.trafikverket.se/v1.3/data.json",
             contentType: "text/xml",
             dataType: "json",
-            data: test,
+            data: query,
             success: function (data) {
                 console.log(data);
                 var rs = data.RESPONSE.RESULT[0].Situation;
@@ -426,6 +448,8 @@ function toggleTrafficMarkers() {
                     }
 
                     var county = rs[i].Deviation[0].CountyNo[0];
+                    //Alla Län är sparade i en lista där ett nummer representerar ett Län.
+                    //En komplett lista över alla Län finns på Trafikverkets API http://api.trafikinfo.trafikverket.se/API/Model - Situation - Deviation.CountyNo[].
                     switch (county) {
                         case 0:
                             county = "Hela Sverige";
@@ -517,6 +541,9 @@ function toggleTrafficMarkers() {
                     html += '</div></a>';
                     $('#news-rss').append(html);
 
+                    //Positionen där nyheten gäller kommer i form av en WKT-punkt se https://en.wikipedia.org/wiki/Well-known_text för mer information.
+                    //Eftersom punkten då behöver göras om till en Feature så används JQuery-plugin:et JQuery Geo.
+                    //Plugin:et gör alltså om WKT-punkten till GeoJSON-data som sedan används för att bygga upp vår struktur för Google Maps GeoJSON.
                     if (rs[i].Deviation[0].Geometry.WGS84 !== undefined) {
 
                         var geojsonObject = $.geo.WKT.parse(rs[i].Deviation[0].Geometry.WGS84);
