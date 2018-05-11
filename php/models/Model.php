@@ -19,6 +19,8 @@ class Model
         return 'done';
     }
 
+    //Funktion för att ta bort en punkt i databasen.
+    //Punkten refereras till genom ett ID.
     public function removeMarker($id){
         $pdo = $this->getPDOConnection();
         $statement = $pdo->prepare("DELETE FROM features WHERE id = :id");
@@ -29,6 +31,7 @@ class Model
         return 'done';
     }
 
+    //Funktion för att uppdatera en punkt baserat på ID.
     public function updateMarker($id, $coords, $info){
         $pdo = $this->getPDOConnection();
         $statement = $pdo->prepare("UPDATE features SET coords = :coords, info = :info WHERE id = :id");
@@ -110,6 +113,8 @@ class Model
         return $res;
     }
 
+    //Funktion för att uppdatera CSV-filen med en databas.
+    //Funktionen är till för att kunna uppdatera backup-filen istället för att tappa all data som läggs in i enbart databasen.
     public function updateCSVFromDB(){
         file_put_contents("./dbs/backup.csv", "");
         $file = fopen("./dbs/backup.csv", "a");
@@ -122,9 +127,7 @@ class Model
         }
 
         fclose($file);
-
         return "done";
-
     }
 
     //Funktion för att hämta värderinformation baserat på koordinater.
